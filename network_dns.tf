@@ -1,0 +1,90 @@
+locals {
+  subnet_dns = "10.55.1.0/24"
+  aclrules_access_dns = [
+    {
+      action       = "allow"
+      cidr_list    = [ local.subnet_dns ]
+      protocol     = "tcp"
+      icmp_type    = null
+      icmp_code    = null
+      ports        = [ "53" ]
+      traffic_type = "egress"
+    },
+    {
+      action       = "allow"
+      cidr_list    = [ local.subnet_dns ]
+      protocol     = "udp"
+      icmp_type    = null
+      icmp_code    = null
+      ports        = [ "53" ]
+      traffic_type = "egress"
+    }
+  ]
+}
+
+resource "cloudstack_network_acl" "dns" {
+  name   = "dns"
+  vpc_id = cloudstack_vpc.infra_vpc.id
+}
+
+resource "cloudstack_network_acl_rule" "dns" {
+  acl_id  = cloudstack_network_acl.dns.id
+  managed = true
+
+  # Bootstrap-only rules
+  dynamic "rule" {
+    for_each = var.bootstrap ? local.aclrules_bootstrap : []
+    content {
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.aclrules_access_dns
+    content {
+      action       = "allow"
+      cidr_list    = [ "0.0.0.0/0" ]
+      protocol     = rule.value.protocol
+      ports        = rule.value.ports
+      traffic_type = "egress"
+    }
+  }
+  dynamic "rule" {
+    for_each = local.aclrules_access_dns
+    content {
+      action       = "allow"
+      cidr_list    = [ "0.0.0.0/0" ]
+      protocol     = rule.value.protocol
+      ports        = rule.value.ports
+      traffic_type = "ingress"
+    }
+  }
+  dynamic "rule" {
+    for_each = local.aclrules_common
+    content {
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
+}
+
+resource "cloudstack_network" "dns" {
+  name             = "dns"
+  vpc_id           = cloudstack_vpc.infra_vpc.id
+  cidr             = local.subnet_dns
+  network_offering = var.cloudstack_networkoffering_isolated
+  zone             = var.cloudstack_zone
+  project          = var.cloudstack_project
+  acl_id           = cloudstack_network_acl.dns.id
+}
