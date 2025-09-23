@@ -1,5 +1,5 @@
 locals {
-  subnet_ipa = "10.55.2.0/24"
+  subnet_ipa = "10.252.3.0/24"
   aclrules_access_ipa = [
     {
       action       = "allow"

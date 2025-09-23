@@ -1,31 +1,31 @@
-resource "cloudstack_affinity_group" "dns" {
-  name    = "dns"
+resource "cloudstack_affinity_group" "ntp" {
+  name    = "ntp"
   type    = "non-strict host anti-affinity"
   project = var.cloudstack_project
 }
 
-module "instance_dns1" {
+module "instance_ntp1" {
   source             = "./modules/cloudstack_instance"
-  name               = "dns1"
+  name               = "ntp1"
   service_offering   = "g1.1c2g"
-  network_id         = cloudstack_network.dns.id
+  network_id         = cloudstack_network.ntp.id
   template           = cloudstack_template.rocky10.id
   zone               = var.cloudstack_zone
-  ip_address         = "10.252.1.11"
+  ip_address         = "10.252.4.11"
   project            = var.cloudstack_project
   root_disk_size     = 20
-  affinity_group_ids = [ cloudstack_affinity_group.dns.id ]
+  affinity_group_ids = [ cloudstack_affinity_group.ntp.id ]
 }
 
-module "instance_dns2" {
+module "instance_ntp2" {
   source             = "./modules/cloudstack_instance"
-  name               = "dns2"
+  name               = "ntp2"
   service_offering   = "g1.1c2g"
-  network_id         = cloudstack_network.dns.id
+  network_id         = cloudstack_network.ntp.id
   template           = cloudstack_template.rocky10.id
   zone               = var.cloudstack_zone
-  ip_address         = "10.252.1.12"
+  ip_address         = "10.252.4.12"
   project            = var.cloudstack_project
   root_disk_size     = 20
-  affinity_group_ids = [ cloudstack_affinity_group.dns.id ]
+  affinity_group_ids = [ cloudstack_affinity_group.ntp.id ]
 }

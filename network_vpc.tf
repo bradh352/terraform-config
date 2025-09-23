@@ -3,7 +3,7 @@
 # 2025-09-20 12:22:45,823 ERROR [c.c.n.IpAddressManagerImpl] (API-Job-Executor-15:[ctx-6bc4b3f4, job-476, ctx-5149f5da]) (logid:f1180184) Unable to get source nat ip address for account
 
 locals {
-  subnet_vpc = "10.55.0.0/16"
+  subnet_vpc = "10.252.0.0/16"
 }
 
 resource "cloudstack_vpc" "infra_vpc" {

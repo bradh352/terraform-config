@@ -11,7 +11,7 @@ module "instance_ipa1" {
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id
   zone               = var.cloudstack_zone
-  ip_address         = "10.55.2.11"
+  ip_address         = "10.252.3.11"
   project            = var.cloudstack_project
   root_disk_size     = 40
   affinity_group_ids = [ cloudstack_affinity_group.ipa.id ]
@@ -24,7 +24,7 @@ module "instance_ipa2" {
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id
   zone               = var.cloudstack_zone
-  ip_address         = "10.55.2.12"
+  ip_address         = "10.252.3.12"
   project            = var.cloudstack_project
   root_disk_size     = 40
   affinity_group_ids = [ cloudstack_affinity_group.ipa.id ]
@@ -37,7 +37,7 @@ module "instance_ipa3" {
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id
   zone               = var.cloudstack_zone
-  ip_address         = "10.55.2.13"
+  ip_address         = "10.252.3.13"
   project            = var.cloudstack_project
   root_disk_size     = 40
   affinity_group_ids = [ cloudstack_affinity_group.ipa.id ]

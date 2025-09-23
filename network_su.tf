@@ -1,5 +1,5 @@
 locals {
-  subnet_su = "10.55.99.0/24"
+  subnet_su = "10.252.0.0/24"
   aclrules_access_su = [
     {
       action       = "allow"
