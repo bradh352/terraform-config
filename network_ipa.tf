@@ -61,7 +61,7 @@ resource "cloudstack_network_acl_rule" "ipa" {
   }
 
   dynamic "rule" {
-    for_each = concat(local.aclrules_common, aclrules_access_secureproxy, aclrules_access_secureproxy)
+    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy, local.aclrules_access_ldapproxy)
     content {
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
