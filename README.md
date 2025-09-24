@@ -56,3 +56,13 @@ IsolatedNetworkOfferingForVpcNetworksConfigDrive:
 ### Create OS's
 * AlmaLinux 10
 * Rocky Linux 10
+
+## Bootstrapping the Cluster
+
+1. Terraform deploy with bootstrap=yes
+2. Deploy bastion host first.  Initially set DNS to 8.8.8.8 until internal DNS servers are provisioned
+3. Deploy Nameservers
+4. Re-deploy bastion host using internal DNS servers
+5. Deploy Mirror, wait for mirror to sync.
+6. Deploy FreeIPA
+7.
