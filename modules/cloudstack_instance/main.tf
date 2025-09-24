@@ -18,7 +18,7 @@ variable "name" {
   type        = string
 }
 
-variable "name" {
+variable "group" {
   description = "Instance Group Name"
   type        = string
   nullable    = true
