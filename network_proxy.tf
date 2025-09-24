@@ -1,8 +1,8 @@
 locals {
   subnet_proxy   = "10.252.5.0/24"
-  ip_secureproxy = "10.252.5.10/24"
-  ip_cacheproxy  = "10.252.5.20/24"
-  ip_gitproxy    = "10.252.5.30/24"
+  ip_secureproxy = "10.252.5.11/24"
+  ip_cacheproxy  = "10.252.5.21/24"
+  ip_gitproxy    = "10.252.5.31/24"
   aclrules_access_secureproxy = [
     {
       action       = "allow"

@@ -7,6 +7,7 @@ resource "cloudstack_affinity_group" "ntp" {
 module "instance_ntp1" {
   source             = "./modules/cloudstack_instance"
   name               = "ntp1"
+  group              = "ntp"
   service_offering   = "g1.1c2g"
   network_id         = cloudstack_network.ntp.id
   template           = cloudstack_template.rocky10.id
@@ -20,6 +21,7 @@ module "instance_ntp1" {
 module "instance_ntp2" {
   source             = "./modules/cloudstack_instance"
   name               = "ntp2"
+  group              = "ntp"
   service_offering   = "g1.1c2g"
   network_id         = cloudstack_network.ntp.id
   template           = cloudstack_template.rocky10.id

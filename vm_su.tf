@@ -1,6 +1,7 @@
 module "instance_bastion" {
   source           = "./modules/cloudstack_instance"
   name             = "bastion"
+  group            = "bastion"
   service_offering = "g1.1c2g"
   template         = cloudstack_template.rocky10.id
   ip_address       = "10.252.0.10"

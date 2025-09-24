@@ -5,8 +5,9 @@ resource "cloudstack_affinity_group" "ipa" {
 }
 
 module "instance_ipa1" {
-  source           = "./modules/cloudstack_instance"
+  source             = "./modules/cloudstack_instance"
   name               = "ipa1"
+  group              = "ipa"
   service_offering   = "g1.2c4g"
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id
@@ -20,6 +21,7 @@ module "instance_ipa1" {
 module "instance_ipa2" {
   source             = "./modules/cloudstack_instance"
   name               = "ipa2"
+  group              = "ipa"
   service_offering   = "g1.2c4g"
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id
@@ -33,6 +35,7 @@ module "instance_ipa2" {
 module "instance_ipa3" {
   source             = "./modules/cloudstack_instance"
   name               = "ipa3"
+  group              = "ipa"
   service_offering   = "g1.2c4g"
   network_id         = cloudstack_network.ipa.id
   template           = cloudstack_template.rocky10.id

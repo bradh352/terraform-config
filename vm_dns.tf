@@ -7,6 +7,7 @@ resource "cloudstack_affinity_group" "dns" {
 module "instance_dns1" {
   source             = "./modules/cloudstack_instance"
   name               = "dns1"
+  group              = "dns"
   service_offering   = "g1.1c2g"
   network_id         = cloudstack_network.dns.id
   template           = cloudstack_template.rocky10.id
@@ -20,6 +21,7 @@ module "instance_dns1" {
 module "instance_dns2" {
   source             = "./modules/cloudstack_instance"
   name               = "dns2"
+  group              = "dns"
   service_offering   = "g1.1c2g"
   network_id         = cloudstack_network.dns.id
   template           = cloudstack_template.rocky10.id

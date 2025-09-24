@@ -1,6 +1,7 @@
 module "instance_mirror" {
   source             = "./modules/cloudstack_instance"
-  name               = "mirror"
+  name               = "mirror1"
+  group              = "mirror"
   service_offering   = "g1.1c2g"
   network_id         = cloudstack_network.mirror.id
   template           = cloudstack_template.rocky10.id
