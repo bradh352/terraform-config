@@ -18,6 +18,13 @@ variable "name" {
   type        = string
 }
 
+variable "name" {
+  description = "Instance Group Name"
+  type        = string
+  nullable    = true
+  default     = null
+}
+
 variable "service_offering" {
   description = "Service Offering"
   type        = string
@@ -60,6 +67,7 @@ variable "root_disk_size" {
 
 resource "cloudstack_instance" "this" {
   name               = var.name
+  group              = var.group
   service_offering   = var.service_offering
   network_id         = var.network_id
   template           = var.template
