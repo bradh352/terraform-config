@@ -51,7 +51,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   managed = true
 
   rule {
-    description  = "Allow ingress proxy"
+    #description  = "Allow ingress proxy"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -62,7 +62,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
-      description  = rule.value.description
+      #description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
