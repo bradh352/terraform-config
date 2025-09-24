@@ -51,7 +51,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
-    ports        = "8080"
+    ports        = [ "8080" ]
     traffic_type = "ingress"
   }
 
