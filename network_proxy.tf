@@ -5,6 +5,7 @@ locals {
   ip_gitproxy    = "10.252.5.31/24"
   aclrules_access_secureproxy = [
     {
+      description  = "proxy secureproxy"
       action       = "allow"
       cidr_list    = [ local.ip_secureproxy ]
       protocol     = "tcp"
@@ -16,6 +17,7 @@ locals {
   ]
   aclrules_access_cacheproxy = [
     {
+      description  = "proxy cacheproxy"
       action       = "allow"
       cidr_list    = [ local.ip_cacheproxy ]
       protocol     = "tcp"
@@ -27,6 +29,7 @@ locals {
   ]
   aclrules_access_gitproxy = [
     {
+      description  = "proxy gitproxy"
       action       = "allow"
       cidr_list    = [ local.ip_gitproxy ]
       protocol     = "tcp"
@@ -48,6 +51,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   managed = true
 
   rule {
+    description  = "Allow ingress proxy"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -58,6 +62,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol

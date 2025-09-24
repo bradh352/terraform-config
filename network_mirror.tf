@@ -2,6 +2,7 @@ locals {
   subnet_mirror = "10.252.2.0/24"
   aclrules_access_mirror = [
     {
+      description  = "http and https mirror"
       action       = "allow"
       cidr_list    = [ local.subnet_mirror ]
       protocol     = "tcp"
@@ -23,6 +24,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   managed = true
 
   rule {
+    description  = "allow to public http, https, rsync"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -32,6 +34,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = local.aclrules_access_mirror
     content {
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -42,6 +45,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol

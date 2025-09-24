@@ -2,6 +2,7 @@ locals {
   subnet_ldapproxy = "10.252.6.0/24"
   aclrules_access_ldapproxy = [
     {
+      description  = "ldap and ldaps"
       action       = "allow"
       cidr_list    = [ local.subnet_ldapproxy ]
       protocol     = "tcp"
@@ -25,6 +26,7 @@ resource "cloudstack_network_acl_rule" "ldapproxy" {
   dynamic "rule" {
     for_each = local.aclrules_access_ldapproxy
     content {
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -36,6 +38,7 @@ resource "cloudstack_network_acl_rule" "ldapproxy" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol

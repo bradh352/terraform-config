@@ -2,6 +2,7 @@ locals {
   subnet_su = "10.252.0.0/24"
   aclrules_access_su = [
     {
+      description  = "allow bastion connection to network"
       action       = "allow"
       cidr_list    = [ local.subnet_su ]
       protocol     = "tcp"
@@ -24,6 +25,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # Disallow other VPC subnets from SSHing to network
   rule {
+    description  = "disallow VPC subnets from SSHing into bastion"
     action       = "deny"
     cidr_list    = [ local.subnet_vpc ]
     protocol     = "tcp"
@@ -33,6 +35,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # Allow the rest of the world to SSH, since this will have a bastion host.
   rule {
+    description  = "disallow public networks to SSH into bastion"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -42,6 +45,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # This host is allowed to SSH anywhere in the VPC
   rule {
+    description  = "allow bastion connection to network"
     action       = "allow"
     cidr_list    = [ local.subnet_vpc ]
     protocol     = "tcp"
@@ -53,6 +57,7 @@ resource "cloudstack_network_acl_rule" "su" {
   dynamic "rule" {
     for_each = var.bootstrap ? local.aclrules_bootstrap : []
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -67,6 +72,7 @@ resource "cloudstack_network_acl_rule" "su" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol

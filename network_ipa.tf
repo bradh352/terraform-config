@@ -2,6 +2,7 @@ locals {
   subnet_ipa = "10.252.3.0/24"
   aclrules_access_ipa = [
     {
+      description  = "IPA http and https"
       action       = "allow"
       cidr_list    = [ local.subnet_ipa ]
       protocol     = "tcp"
@@ -11,6 +12,7 @@ locals {
       traffic_type = "egress"
     },
     {
+      description  = "IPA ldap and ldaps"
       action       = "allow"
       cidr_list    = [ local.subnet_ipa ]
       protocol     = "tcp"
@@ -20,6 +22,7 @@ locals {
       traffic_type = "egress"
     },
     {
+      description  = "kerberos and kpasswd udp"
       action       = "allow"
       cidr_list    = [ local.subnet_ipa ]
       protocol     = "udp"
@@ -29,6 +32,7 @@ locals {
       traffic_type = "egress"
     },
     {
+      description  = "kerberos and kpasswd tcp"
       action       = "allow"
       cidr_list    = [ local.subnet_ipa ]
       protocol     = "tcp"
@@ -52,6 +56,7 @@ resource "cloudstack_network_acl_rule" "ipa" {
   dynamic "rule" {
     for_each = local.aclrules_access_ipa
     content {
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -63,6 +68,7 @@ resource "cloudstack_network_acl_rule" "ipa" {
   dynamic "rule" {
     for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy, local.aclrules_access_ldapproxy)
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol

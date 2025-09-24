@@ -2,6 +2,7 @@ locals {
   subnet_dns = "10.252.1.0/24"
   aclrules_access_dns = [
     {
+      description  = "dns:tcp"
       action       = "allow"
       cidr_list    = [ local.subnet_dns ]
       protocol     = "tcp"
@@ -11,6 +12,7 @@ locals {
       traffic_type = "egress"
     },
     {
+      description  = "dns:udp"
       action       = "allow"
       cidr_list    = [ local.subnet_dns ]
       protocol     = "udp"
@@ -35,6 +37,7 @@ resource "cloudstack_network_acl_rule" "dns" {
   dynamic "rule" {
     for_each = var.bootstrap ? local.aclrules_bootstrap : []
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -48,6 +51,7 @@ resource "cloudstack_network_acl_rule" "dns" {
   dynamic "rule" {
     for_each = local.aclrules_access_dns
     content {
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -58,6 +62,7 @@ resource "cloudstack_network_acl_rule" "dns" {
   dynamic "rule" {
     for_each = local.aclrules_access_dns
     content {
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -68,6 +73,7 @@ resource "cloudstack_network_acl_rule" "dns" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
