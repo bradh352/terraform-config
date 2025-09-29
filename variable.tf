@@ -53,3 +53,9 @@ variable "cloudstack_default_instance_service_offering" {
   type        = string
   default     = "g1.2c4g"
 }
+
+variable "cloudstack_disk_offering" {
+  description = "Cloudstack Disk Offering for secondary disks"
+  type        = string
+  default     = "Custom - WriteBack"
+}

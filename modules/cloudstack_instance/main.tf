@@ -83,6 +83,7 @@ resource "cloudstack_instance" "this" {
   }
   details            = {
     "rootDiskController" = "scsi"
+    "dataDiskController" = "scsi"
     "iothreads"          = "1"
     "io.policy"          = "io_uring"
   }
