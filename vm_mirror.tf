@@ -16,7 +16,7 @@ resource "cloudstack_disk" "mirror_data_disk" {
   attach             = "true"
   disk_offering      = var.cloudstack_disk_offering
   size               = 8192
-  virtual_machine_id = instance_mirror.mirror1.id
+  virtual_machine_id = instance_mirror.id
   zone               = var.cloudstack_zone
   project            = var.cloudstack_project
 }
