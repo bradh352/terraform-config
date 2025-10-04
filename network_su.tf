@@ -30,7 +30,6 @@ resource "cloudstack_network_acl_rule" "su" {
       dynamic "rule" {
         for_each = rulelist.value.rules
         content {
-          rule_number  = "${index(rulelist.value.rules, rule.value) + 1 + rulelist.value.start_idx}"
           description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
           action       = rule.value.action
           cidr_list    = rule.value.cidr_list
