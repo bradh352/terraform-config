@@ -24,8 +24,7 @@ resource "cloudstack_network_acl_rule" "su" {
   managed = true
 
   dynamic "rule" {
-    for_each = {
-      for item in flatten([
+    for_each = flatten([
         for list in local.aclrules_common_list : [
           for rule in list.rules : {
             description = rule.description
@@ -39,7 +38,6 @@ resource "cloudstack_network_acl_rule" "su" {
           }
         ]
       ])
-    }
     content {
       description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
       action       = rule.value.action
