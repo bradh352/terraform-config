@@ -40,6 +40,7 @@ resource "cloudstack_network_acl_rule" "su" {
         ]
       ])
     content {
+      rule_number  = rule.value.rule_number
       description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
