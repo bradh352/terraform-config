@@ -22,4 +22,26 @@ locals {
       traffic_type = "egress"
     }
   ]
+  aclrules_common_list = [
+    {
+      start_idx = 1
+      rules     = local.aclrules_access_dns
+    },
+    {
+      start_idx = 100
+      rules     = local.aclrules_access_ipa
+    },
+    {
+      start_idx = 200
+      rules     = local.aclrules_access_su
+    },
+    {
+      start_idx = 300
+      rules     = local.aclrules_access_mirror
+    },
+    {
+      start_idx = 400
+      rules     = local.aclrules_access_ntp
+    }
+  ]
 }
