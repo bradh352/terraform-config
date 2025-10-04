@@ -50,6 +50,7 @@ resource "cloudstack_network_acl_rule" "nfs" {
   }
   # Deny all others
   rule {
+    rule_number  = 99999
     description  = "deny egress by default"
     action       = "deny"
     cidr_list    = [ "0.0.0.0/0" ]
