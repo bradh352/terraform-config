@@ -24,17 +24,23 @@ resource "cloudstack_network_acl_rule" "su" {
   managed = true
 
   # Allow access to resources provided by VPC
-  dynamic "rule" {
-    for_each = local.aclrules_common
+  dynamic "rulelist" {
+    for_each = local.aclrules_common_list
     content {
-      description  = "${rule.value.description} ${rule.value.action} ${rule.value.traffic_type}"
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
+      dynamic "rule" {
+        for_each = rulelist.value.rules
+        content {
+          rule_number  = "${index(rulelist.value.rules, rule.value) + 1 + rulelist.value.start_idx}"
+          description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
+          action       = rule.value.action
+          cidr_list    = rule.value.cidr_list
+          protocol     = rule.value.protocol
+          icmp_type    = rule.value.icmp_type
+          icmp_code    = rule.value.icmp_code
+          ports        = rule.value.ports
+          traffic_type = rule.value.traffic_type
+        }
+      }
     }
   }
 
