@@ -69,7 +69,7 @@ resource "cloudstack_network_acl_rule" "nfs" {
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = try([ rule.value.port ], null)
+      ports        = rule.value.port == null ? null : [ rule.value.port ]
       traffic_type = rule.value.traffic_type
     }
   }
