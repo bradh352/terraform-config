@@ -23,23 +23,32 @@ resource "cloudstack_network_acl_rule" "su" {
   acl_id  = cloudstack_network_acl.su.id
   managed = true
 
-  # Allow access to resources provided by VPC
-  dynamic "rulelist" {
-    for_each = local.aclrules_common_list
+  dynamic "rule" {
+    for_each = {
+      for item in flatten([
+        for list in local.aclrules_common_list : [
+          for rule in list.rules : {
+            description = rule.description
+            action       = rule.action
+            cidr_list    = rule.cidr_list
+            protocol     = rule.protocol
+            icmp_type    = rule.icmp_type
+            icmp_code    = rule.icmp_code
+            ports        = rule.ports
+            traffic_type = rule.traffic_type
+          }
+        ]
+      ])
+    }
     content {
-      dynamic "rule" {
-        for_each = rulelist.value.rules
-        content {
-          description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
-          action       = rule.value.action
-          cidr_list    = rule.value.cidr_list
-          protocol     = rule.value.protocol
-          icmp_type    = rule.value.icmp_type
-          icmp_code    = rule.value.icmp_code
-          ports        = rule.value.ports
-          traffic_type = rule.value.traffic_type
-        }
-      }
+      description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
     }
   }
 
