@@ -27,7 +27,8 @@ resource "cloudstack_network_acl_rule" "su" {
     for_each = flatten([
         for list in local.aclrules_common_list : [
           for rule in list.rules : {
-            description = rule.description
+            rule_number  = "${list.start_idx + index(list.rules, rule)}"
+            description  = rule.description
             action       = rule.action
             cidr_list    = rule.cidr_list
             protocol     = rule.protocol
