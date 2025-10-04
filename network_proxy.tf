@@ -72,6 +72,14 @@ resource "cloudstack_network_acl_rule" "proxy" {
     ports        = [ "8080" ]
     traffic_type = "ingress"
   }
+  rule {
+    #description  = "Allow egress to world on 80 and 443"
+    action       = "allow"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "tcp"
+    ports        = [ "80", "443" ]
+    traffic_type = "egress"
+  }
 }
 
 resource "cloudstack_network" "proxy" {
