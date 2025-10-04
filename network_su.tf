@@ -60,7 +60,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # This host is allowed to SSH anywhere in the VPC
   rule {
-    #description  = "allow bastion connection to network"
+    description  = "allow bastion connection to network"
     action       = "allow"
     cidr_list    = [ local.subnet_vpc ]
     protocol     = "tcp"
@@ -85,7 +85,7 @@ resource "cloudstack_network_acl_rule" "su" {
   # Deny all others
   rule {
     description  = "deny egress by default"
-    rule_number  = 99999
+    rule_number  = 65535
     action       = "deny"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "all"

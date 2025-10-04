@@ -81,7 +81,7 @@ resource "cloudstack_network_acl_rule" "ipa" {
   # Deny all others
   rule {
     description  = "deny egress by default"
-    rule_number  = 99999
+    rule_number  = 65535
     action       = "deny"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "all"
