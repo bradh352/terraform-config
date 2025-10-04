@@ -16,7 +16,7 @@ locals {
     ]
   }
 
-  aclrules_access_ntp = {
+  aclrules_ntp = {
     start_idx = 1450
     rules     = [
       {

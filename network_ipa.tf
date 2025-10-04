@@ -41,7 +41,7 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        port         = 636"
+        port         = "636"
         traffic_type = "egress"
       },
       {
@@ -127,7 +127,7 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        port         = 636"
+        port         = "636"
         traffic_type = "ingress"
       },
       {

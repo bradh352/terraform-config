@@ -1,7 +1,7 @@
 locals {
   subnet_dns          = "10.252.1.0/24"
 
-  aclrules_access_dns = {}
+  aclrules_access_dns = {
     start_idx = 1100
     rules     = [
       {
