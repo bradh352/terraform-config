@@ -60,5 +60,6 @@ locals {
       }
     ]
   }
-  aclrules_common = [ local.aclrules_access_dns, local.aclrules_access_ipa, local.aclrules_access_su, local.aclrules_access_mirror, local.aclrules_access_ntp, var.bootstrap ? local.aclrules_bootstrap : null, aclrules_deny_all ]
+  aclrules_common = [ local.aclrules_access_dns, local.aclrules_access_ipa, local.aclrules_access_su, local.aclrules_access_mirror, local.aclrules_access_ntp, aclrules_deny_all ]
+  # var.bootstrap ? local.aclrules_bootstrap : null,
 }

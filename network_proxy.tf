@@ -83,7 +83,7 @@ locals {
     ]
   }
 
-  aclrules_proxy_all = concat(local.acrules_common, [ local.aclrules_proxy ])
+  aclrules_proxy_all = concat(local.aclrules_common, [ local.aclrules_proxy ])
 }
 
 resource "cloudstack_network_acl" "proxy" {

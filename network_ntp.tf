@@ -42,7 +42,7 @@ locals {
     ]
   }
 
-  aclrules_ntp_all = concat(local.acrules_common, [ local.aclrules_ntp ])
+  aclrules_ntp_all = concat(local.aclrules_common, [ local.aclrules_ntp ])
 }
 
 resource "cloudstack_network_acl" "ntp" {
