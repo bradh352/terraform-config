@@ -23,6 +23,19 @@ resource "cloudstack_network_acl_rule" "mirror" {
   acl_id  = cloudstack_network_acl.mirror.id
   managed = true
 
+  dynamic "rule" {
+    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
+    content {
+      #description  = rule.value.description
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
   rule {
     #description  = "allow to public http, https, rsync"
     action       = "allow"
@@ -43,7 +56,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
     }
   }
   dynamic "rule" {
-    for_each = local.aclrules_common
+    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
     content {
       #description  = rule.value.description
       action       = rule.value.action

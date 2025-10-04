@@ -23,6 +23,21 @@ resource "cloudstack_network_acl_rule" "su" {
   acl_id  = cloudstack_network_acl.su.id
   managed = true
 
+  # Allow access to resources provided by VPC
+  dynamic "rule" {
+    for_each = local.aclrules_common
+    content {
+      #description  = rule.value.description
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
+
   # Disallow other VPC subnets from SSHing to network
   rule {
     #description  = "disallow VPC subnets from SSHing into bastion"
@@ -68,20 +83,6 @@ resource "cloudstack_network_acl_rule" "su" {
     }
   }
 
-  # Allow access to resources provided by VPC
-  dynamic "rule" {
-    for_each = local.aclrules_common
-    content {
-      #description  = rule.value.description
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
-    }
-  }
 }
 
 resource "cloudstack_network" "su" {

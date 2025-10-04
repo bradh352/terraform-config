@@ -24,6 +24,20 @@ resource "cloudstack_network_acl_rule" "ntp" {
   managed = true
 
   dynamic "rule" {
+    for_each = local.aclrules_common
+    content {
+      #description  = rule.value.description
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
+
+  dynamic "rule" {
     for_each = local.aclrules_access_ntp
     content {
       #description  = rule.value.description
@@ -43,19 +57,6 @@ resource "cloudstack_network_acl_rule" "ntp" {
       protocol     = rule.value.protocol
       ports        = rule.value.ports
       traffic_type = "ingress"
-    }
-  }
-  dynamic "rule" {
-    for_each = local.aclrules_common
-    content {
-      #description  = rule.value.description
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
     }
   }
 }

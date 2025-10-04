@@ -9,7 +9,7 @@ user:
   lock_passwd: False
   gecos: Infra
   plain_text_passwd: "Test123$"
-  sudo: ["ALL=(ALL) NOPASSWD:ALL"]
+  sudo: ["ALL=(ALL) ALL"]
   shell: /bin/bash
   ssh_authorized_keys:
     - "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIEUwODVaR5cV49C20XCZhWF+aPGwLuVdmxCgkjhwgWbs"

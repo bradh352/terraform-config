@@ -24,19 +24,7 @@ resource "cloudstack_network_acl_rule" "ldapproxy" {
   managed = true
 
   dynamic "rule" {
-    for_each = local.aclrules_access_ldapproxy
-    content {
-      #description  = "${rule.value.description} allow ingress"
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "ingress"
-    }
-  }
-
-  dynamic "rule" {
-    for_each = local.aclrules_common
+    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
     content {
       #description  = "${rule.value.description} ${rule.value.action} ${rule.value.traffic_type} ${rule.value.traffic_type == 'ingress'?'from':'to'} ${join(',', rule.value.cidr_list)}"
       action       = rule.value.action
@@ -48,6 +36,19 @@ resource "cloudstack_network_acl_rule" "ldapproxy" {
       traffic_type = rule.value.traffic_type
     }
   }
+
+  dynamic "rule" {
+    for_each = local.aclrules_access_ldapproxy
+    content {
+      #description  = "${rule.value.description} allow ingress"
+      action       = "allow"
+      cidr_list    = [ "0.0.0.0/0" ]
+      protocol     = rule.value.protocol
+      ports        = rule.value.ports
+      traffic_type = "ingress"
+    }
+  }
+
 }
 
 resource "cloudstack_network" "ldapproxy" {

@@ -24,18 +24,6 @@ resource "cloudstack_network_acl_rule" "nfs" {
   managed = true
 
   dynamic "rule" {
-    for_each = local.aclrules_access_nfs
-    content {
-      #description  = rule.value.description
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "ingress"
-    }
-  }
-
-  dynamic "rule" {
     for_each = local.aclrules_common
     content {
       #description  = rule.value.description
@@ -46,6 +34,18 @@ resource "cloudstack_network_acl_rule" "nfs" {
       icmp_code    = rule.value.icmp_code
       ports        = rule.value.ports
       traffic_type = rule.value.traffic_type
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.aclrules_access_nfs
+    content {
+      #description  = rule.value.description
+      action       = "allow"
+      cidr_list    = [ "0.0.0.0/0" ]
+      protocol     = rule.value.protocol
+      ports        = rule.value.ports
+      traffic_type = "ingress"
     }
   }
 }

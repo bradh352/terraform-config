@@ -50,15 +50,6 @@ resource "cloudstack_network_acl_rule" "proxy" {
   acl_id  = cloudstack_network_acl.proxy.id
   managed = true
 
-  rule {
-    #description  = "Allow ingress proxy"
-    action       = "allow"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "tcp"
-    ports        = [ "8080" ]
-    traffic_type = "ingress"
-  }
-
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
@@ -71,6 +62,15 @@ resource "cloudstack_network_acl_rule" "proxy" {
       ports        = rule.value.ports
       traffic_type = rule.value.traffic_type
     }
+  }
+
+  rule {
+    #description  = "Allow ingress proxy"
+    action       = "allow"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "tcp"
+    ports        = [ "8080" ]
+    traffic_type = "ingress"
   }
 }
 

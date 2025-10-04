@@ -33,6 +33,20 @@ resource "cloudstack_network_acl_rule" "dns" {
   acl_id  = cloudstack_network_acl.dns.id
   managed = true
 
+  dynamic "rule" {
+    for_each = local.aclrules_common
+    content {
+      #description  = rule.value.description
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      ports        = rule.value.ports
+      traffic_type = rule.value.traffic_type
+    }
+  }
+
   # Bootstrap-only rules
   dynamic "rule" {
     for_each = var.bootstrap ? local.aclrules_bootstrap : []
@@ -47,7 +61,6 @@ resource "cloudstack_network_acl_rule" "dns" {
       traffic_type = rule.value.traffic_type
     }
   }
-
   dynamic "rule" {
     for_each = local.aclrules_access_dns
     content {
@@ -68,19 +81,6 @@ resource "cloudstack_network_acl_rule" "dns" {
       protocol     = rule.value.protocol
       ports        = rule.value.ports
       traffic_type = "ingress"
-    }
-  }
-  dynamic "rule" {
-    for_each = local.aclrules_common
-    content {
-      #description  = rule.value.description
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
     }
   }
 }

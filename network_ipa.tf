@@ -54,18 +54,6 @@ resource "cloudstack_network_acl_rule" "ipa" {
   managed = true
 
   dynamic "rule" {
-    for_each = local.aclrules_access_ipa
-    content {
-      #description  = rule.value.description
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "ingress"
-    }
-  }
-
-  dynamic "rule" {
     for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy, local.aclrules_access_ldapproxy)
     content {
       #description  = rule.value.description
@@ -76,6 +64,18 @@ resource "cloudstack_network_acl_rule" "ipa" {
       icmp_code    = rule.value.icmp_code
       ports        = rule.value.ports
       traffic_type = rule.value.traffic_type
+    }
+  }
+
+  dynamic "rule" {
+    for_each = local.aclrules_access_ipa
+    content {
+      #description  = rule.value.description
+      action       = "allow"
+      cidr_list    = [ "0.0.0.0/0" ]
+      protocol     = rule.value.protocol
+      ports        = rule.value.ports
+      traffic_type = "ingress"
     }
   }
 }
