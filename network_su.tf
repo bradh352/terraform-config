@@ -1,26 +1,25 @@
 locals {
-  subnet_su = "10.252.0.0/24"
-  aclrules_access_su = [
-    {
-      description  = "allow bastion connection to network"
-      action       = "allow"
-      cidr_list    = [ local.subnet_su ]
-      protocol     = "tcp"
-      icmp_type    = null
-      icmp_code    = null
-      ports        = [ "22" ]
-      traffic_type = "ingress"
-    }
-  ]
-  aclrules_access_su_list = [
-    {
-      start_idx = 0
-      rules     = local.aclrules_access_su
-    }
-  ]
+  subnet_su          = "10.252.0.0/24"
+
+  aclrules_access_su = {
+    start_idx = 1000
+    rules     = [
+      {
+        description  = "allow bastion connection to network"
+        action       = "allow"
+        cidr_list    = [ local.subnet_su ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "22"
+        traffic_type = "ingress"
+      }
+    ]
+  }
+
   aclrules_su = {
-    start_idx = 50
-    rules = [
+    start_idx = 1050
+    rules     = [
       {
         description  = "disallow VPC subnets from SSHing into bastion"
         action       = "deny"
@@ -28,17 +27,17 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        ports        = [ "22" ]
+        port         = "22"
         traffic_type = "ingress"
       },
       {
-        description  = "disallow public networks to SSH into bastion"
+        description  = "allow public networks to SSH into bastion"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        ports        = [ "22" ]
+        port         = "22"
         traffic_type = "ingress"
       },
       {
@@ -48,12 +47,13 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        ports        = [ "22" ]
+        port         = "22"
         traffic_type = "egress"
       }
     ]
   }
-  aclrules_su_all = concat(local.aclrules_common_list, [ local.aclrules_su ])
+
+  aclrules_su_all = concat(local.aclrules_common, [ local.aclrules_su ])
 }
 
 resource "cloudstack_network_acl" "su" {
@@ -76,7 +76,7 @@ resource "cloudstack_network_acl_rule" "su" {
             protocol     = rule.protocol
             icmp_type    = rule.icmp_type
             icmp_code    = rule.icmp_code
-            ports        = rule.ports
+            port         = rule.port
             traffic_type = rule.traffic_type
           }
         ]
@@ -89,33 +89,9 @@ resource "cloudstack_network_acl_rule" "su" {
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
+      ports        = [ rule.value.port ]
       traffic_type = rule.value.traffic_type
     }
-  }
-
-  # Bootstrap-only rules
-  dynamic "rule" {
-    for_each = var.bootstrap ? local.aclrules_bootstrap : []
-    content {
-      description  = rule.value.description
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
-    }
-  }
-  # Deny all others
-  rule {
-    description  = "deny egress by default"
-    rule_number  = 65535
-    action       = "deny"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "all"
-    traffic_type = "egress"
   }
 }
 

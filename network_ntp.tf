@@ -1,17 +1,48 @@
 locals {
   subnet_ntp = "10.252.4.0/24"
-  aclrules_access_ntp = [
-    {
-      description  = "ntp"
-      action       = "allow"
-      cidr_list    = [ local.subnet_ntp ]
-      protocol     = "udp"
-      icmp_type    = null
-      icmp_code    = null
-      ports        = [ "123" ]
-      traffic_type = "egress"
-    }
-  ]
+  aclrules_access_ntp = {
+    start_idx = 1400
+    rules     = [
+      {
+        description  = "ntp"
+        action       = "allow"
+        cidr_list    = [ local.subnet_ntp ]
+        protocol     = "udp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "123"
+        traffic_type = "egress"
+      }
+    ]
+  }
+
+  aclrules_access_ntp = {
+    start_idx = 1450
+    rules     = [
+      {
+        description  = "ntp"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "udp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "123"
+        traffic_type = "egress"
+      },
+      {
+        description  = "ntp"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "udp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "123"
+        traffic_type = "ingress"
+      }
+    ]
+  }
+
+  aclrules_ntp_all = concat(local.acrules_common, [ local.aclrules_ntp ])
 }
 
 resource "cloudstack_network_acl" "ntp" {
@@ -24,49 +55,32 @@ resource "cloudstack_network_acl_rule" "ntp" {
   managed = true
 
   dynamic "rule" {
-    for_each = local.aclrules_common
+    for_each = flatten([
+        for list in local.aclrules_ntp_all : [
+          for rule in list.rules : {
+            rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
+            description  = rule.description
+            action       = rule.action
+            cidr_list    = rule.cidr_list
+            protocol     = rule.protocol
+            icmp_type    = rule.icmp_type
+            icmp_code    = rule.icmp_code
+            port         = rule.port
+            traffic_type = rule.traffic_type
+          }
+        ]
+      ])
     content {
-      description  = rule.value.description
+      rule_number  = rule.value.rule_number
+      description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
+      ports        = [ rule.value.port ]
       traffic_type = rule.value.traffic_type
     }
-  }
-
-  dynamic "rule" {
-    for_each = local.aclrules_access_ntp
-    content {
-      description  = rule.value.description
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "egress"
-    }
-  }
-  dynamic "rule" {
-    for_each = local.aclrules_access_ntp
-    content {
-      description  = rule.value.description
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "ingress"
-    }
-  }
-  # Deny all others
-  rule {
-    description  = "deny egress by default"
-    rule_number  = 65535
-    action       = "deny"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "all"
-    traffic_type = "egress"
   }
 }
 

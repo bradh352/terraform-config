@@ -1,17 +1,88 @@
 locals {
   subnet_mirror = "10.252.2.0/24"
-  aclrules_access_mirror = [
-    {
-      description  = "http and https mirror"
-      action       = "allow"
-      cidr_list    = [ local.subnet_mirror ]
-      protocol     = "tcp"
-      icmp_type    = null
-      icmp_code    = null
-      ports        = [ "80", "443" ]
-      traffic_type = "egress"
-    }
-  ]
+  aclrules_access_mirror = {
+    start_idx = 1200
+    rules     = [
+      {
+        description  = "http mirror"
+        action       = "allow"
+        cidr_list    = [ local.subnet_mirror ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "80"
+        traffic_type = "egress"
+      },
+      {
+        description  = "http and https mirror"
+        action       = "allow"
+        cidr_list    = [ local.subnet_mirror ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "443"
+        traffic_type = "egress"
+      }
+    ]
+  }
+
+  aclrules_mirror = {
+    start_idx = 1250
+    rules     = [
+      {
+        description  = "http mirror"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "80"
+        traffic_type = "ingress"
+      },
+      {
+        description  = "https mirror"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "443"
+        traffic_type = "ingress"
+      },
+      {
+        description  = "http"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "80"
+        traffic_type = "egress"
+      },
+      {
+        description  = "https"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "443"
+        traffic_type = "egress"
+      },
+      {
+        description  = "rsync"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "873"
+        traffic_type = "egress"
+      }
+    ]
+  }
+
+  aclrules_mirror_all = concat(local.aclrules_common, [ local.aclrules_access_secureproxy, local.aclrules_mirror ])
 }
 
 resource "cloudstack_network_acl" "mirror" {
@@ -24,46 +95,32 @@ resource "cloudstack_network_acl_rule" "mirror" {
   managed = true
 
   dynamic "rule" {
-    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
+    for_each = flatten([
+        for list in local.aclrules_mirror_all : [
+          for rule in list.rules : {
+            rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
+            description  = rule.description
+            action       = rule.action
+            cidr_list    = rule.cidr_list
+            protocol     = rule.protocol
+            icmp_type    = rule.icmp_type
+            icmp_code    = rule.icmp_code
+            port         = rule.port
+            traffic_type = rule.traffic_type
+          }
+        ]
+      ])
     content {
-      description  = "${rule.value.description} ${rule.value.action} ${rule.value.traffic_type}"
+      rule_number  = rule.value.rule_number
+      description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
+      ports        = [ rule.value.port ]
       traffic_type = rule.value.traffic_type
     }
-  }
-  rule {
-    description  = "allow to public http, https, rsync"
-    action       = "allow"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "tcp"
-    ports        = [ "80", "443", "873" ]
-    traffic_type = "egress"
-  }
-  dynamic "rule" {
-    for_each = local.aclrules_access_mirror
-    content {
-      description  = rule.value.description
-      action       = "allow"
-      cidr_list    = [ "0.0.0.0/0" ]
-      protocol     = rule.value.protocol
-      ports        = rule.value.ports
-      traffic_type = "ingress"
-    }
-  }
-
-  # Deny all others
-  rule {
-    description  = "deny egress by default"
-    rule_number  = 65535
-    action       = "deny"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "all"
-    traffic_type = "egress"
   }
 }
 
