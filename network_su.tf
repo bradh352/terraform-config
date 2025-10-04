@@ -12,6 +12,48 @@ locals {
       traffic_type = "ingress"
     }
   ]
+  aclrules_access_su_list = [
+    {
+      start_idx = 0
+      rules     = aclrules_access_su
+    }
+  ]
+  aclrules_su = {
+    start_idx = 50
+    rules = [
+      {
+        description  = "disallow VPC subnets from SSHing into bastion"
+        action       = "deny"
+        cidr_list    = [ local.subnet_vpc ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        ports        = [ "22" ]
+        traffic_type = "ingress"
+      },
+      {
+        description  = "disallow public networks to SSH into bastion"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        ports        = [ "22" ]
+        traffic_type = "ingress"
+      },
+      {
+        description  = "allow bastion connection to network"
+        action       = "allow"
+        cidr_list    = [ local.subnet_vpc ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        ports        = [ "22" ]
+        traffic_type = "egress"
+      }
+    ]
+  }
+  aclrules_su_all = concat(local.aclrules_common_list, [ local.aclrules_su ])
 }
 
 resource "cloudstack_network_acl" "su" {
@@ -25,9 +67,9 @@ resource "cloudstack_network_acl_rule" "su" {
 
   dynamic "rule" {
     for_each = flatten([
-        for list in local.aclrules_common_list : [
+        for list in local.aclrules_su_all : [
           for rule in list.rules : {
-            rule_number  = "${list.start_idx + index(list.rules, rule)}"
+            rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
             description  = rule.description
             action       = rule.action
             cidr_list    = rule.cidr_list
@@ -50,36 +92,6 @@ resource "cloudstack_network_acl_rule" "su" {
       ports        = rule.value.ports
       traffic_type = rule.value.traffic_type
     }
-  }
-
-  # Disallow other VPC subnets from SSHing to network
-  rule {
-    description  = "disallow VPC subnets from SSHing into bastion"
-    action       = "deny"
-    cidr_list    = [ local.subnet_vpc ]
-    protocol     = "tcp"
-    ports        = [ "22" ]
-    traffic_type = "ingress"
-  }
-
-  # Allow the rest of the world to SSH, since this will have a bastion host.
-  rule {
-    description  = "disallow public networks to SSH into bastion"
-    action       = "allow"
-    cidr_list    = [ "0.0.0.0/0" ]
-    protocol     = "tcp"
-    ports        = [ "22" ]
-    traffic_type = "ingress"
-  }
-
-  # This host is allowed to SSH anywhere in the VPC
-  rule {
-    description  = "allow bastion connection to network"
-    action       = "allow"
-    cidr_list    = [ local.subnet_vpc ]
-    protocol     = "tcp"
-    ports        = [ "22" ]
-    traffic_type = "egress"
   }
 
   # Bootstrap-only rules
