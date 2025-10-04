@@ -61,6 +61,8 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
         port         = "8080"
         traffic_type = "ingress"
       },
@@ -69,6 +71,8 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
         port         = "80"
         traffic_type = "egress"
       },
@@ -77,6 +81,8 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
         port         = "443"
         traffic_type = "egress"
       }
