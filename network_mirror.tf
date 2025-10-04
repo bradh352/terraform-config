@@ -26,7 +26,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
     content {
-      description  = rule.value.description
+      description  = "${rule.value.description} ${rule.value.action} ${rule.value.traffic_type}"
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -55,19 +55,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
       traffic_type = "ingress"
     }
   }
-  dynamic "rule" {
-    for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
-    content {
-      description  = rule.value.description
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      ports        = rule.value.ports
-      traffic_type = rule.value.traffic_type
-    }
-  }
+
   # Deny all others
   rule {
     description  = "deny egress by default"

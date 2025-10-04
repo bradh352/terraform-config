@@ -40,7 +40,7 @@ resource "cloudstack_network_acl_rule" "ldapproxy" {
   dynamic "rule" {
     for_each = local.aclrules_access_ldapproxy
     content {
-      #description  = "${rule.value.description} allow ingress"
+      description  = "${rule.value.description} allow ingress"
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
