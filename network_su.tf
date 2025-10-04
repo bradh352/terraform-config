@@ -27,7 +27,7 @@ resource "cloudstack_network_acl_rule" "su" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -40,7 +40,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # Disallow other VPC subnets from SSHing to network
   rule {
-    #description  = "disallow VPC subnets from SSHing into bastion"
+    description  = "disallow VPC subnets from SSHing into bastion"
     action       = "deny"
     cidr_list    = [ local.subnet_vpc ]
     protocol     = "tcp"
@@ -50,7 +50,7 @@ resource "cloudstack_network_acl_rule" "su" {
 
   # Allow the rest of the world to SSH, since this will have a bastion host.
   rule {
-    #description  = "disallow public networks to SSH into bastion"
+    description  = "disallow public networks to SSH into bastion"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -72,7 +72,7 @@ resource "cloudstack_network_acl_rule" "su" {
   dynamic "rule" {
     for_each = var.bootstrap ? local.aclrules_bootstrap : []
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -82,7 +82,14 @@ resource "cloudstack_network_acl_rule" "su" {
       traffic_type = rule.value.traffic_type
     }
   }
-
+  # Deny all others
+  rule {
+    description  = "deny egress by default"
+    action       = "deny"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "all"
+    traffic_type = "egress"
+  }
 }
 
 resource "cloudstack_network" "su" {

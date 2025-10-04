@@ -53,7 +53,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -65,7 +65,7 @@ resource "cloudstack_network_acl_rule" "proxy" {
   }
 
   rule {
-    #description  = "Allow ingress proxy"
+    description  = "Allow ingress proxy"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -73,11 +73,19 @@ resource "cloudstack_network_acl_rule" "proxy" {
     traffic_type = "ingress"
   }
   rule {
-    #description  = "Allow egress to world on 80 and 443"
+    description  = "Allow egress to world on 80 and 443"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
     ports        = [ "80", "443" ]
+    traffic_type = "egress"
+  }
+  # Deny all others
+  rule {
+    description  = "deny egress by default"
+    action       = "deny"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "all"
     traffic_type = "egress"
   }
 }

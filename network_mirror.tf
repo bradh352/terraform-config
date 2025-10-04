@@ -26,7 +26,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -37,7 +37,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
     }
   }
   rule {
-    #description  = "allow to public http, https, rsync"
+    description  = "allow to public http, https, rsync"
     action       = "allow"
     cidr_list    = [ "0.0.0.0/0" ]
     protocol     = "tcp"
@@ -47,7 +47,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = local.aclrules_access_mirror
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
@@ -58,7 +58,7 @@ resource "cloudstack_network_acl_rule" "mirror" {
   dynamic "rule" {
     for_each = concat(local.aclrules_common, local.aclrules_access_secureproxy)
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -67,6 +67,14 @@ resource "cloudstack_network_acl_rule" "mirror" {
       ports        = rule.value.ports
       traffic_type = rule.value.traffic_type
     }
+  }
+  # Deny all others
+  rule {
+    description  = "deny egress by default"
+    action       = "deny"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "all"
+    traffic_type = "egress"
   }
 }
 

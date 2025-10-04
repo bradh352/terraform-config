@@ -26,7 +26,7 @@ resource "cloudstack_network_acl_rule" "nfs" {
   dynamic "rule" {
     for_each = local.aclrules_common
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = rule.value.action
       cidr_list    = rule.value.cidr_list
       protocol     = rule.value.protocol
@@ -40,13 +40,21 @@ resource "cloudstack_network_acl_rule" "nfs" {
   dynamic "rule" {
     for_each = local.aclrules_access_nfs
     content {
-      #description  = rule.value.description
+      description  = rule.value.description
       action       = "allow"
       cidr_list    = [ "0.0.0.0/0" ]
       protocol     = rule.value.protocol
       ports        = rule.value.ports
       traffic_type = "ingress"
     }
+  }
+  # Deny all others
+  rule {
+    description  = "deny egress by default"
+    action       = "deny"
+    cidr_list    = [ "0.0.0.0/0" ]
+    protocol     = "all"
+    traffic_type = "egress"
   }
 }
 
