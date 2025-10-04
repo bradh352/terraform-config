@@ -15,7 +15,7 @@ locals {
   aclrules_access_su_list = [
     {
       start_idx = 0
-      rules     = aclrules_access_su
+      rules     = local.aclrules_access_su
     }
   ]
   aclrules_su = {
