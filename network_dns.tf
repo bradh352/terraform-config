@@ -90,13 +90,13 @@ resource "cloudstack_network_acl_rule" "dns" {
         for list in local.aclrules_dns_all : [
           for rule in list.rules : {
             rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
-            description  = rule.description
+            description  = try(rule.description, "")
             action       = rule.action
             cidr_list    = rule.cidr_list
             protocol     = rule.protocol
-            icmp_type    = rule.icmp_type
-            icmp_code    = rule.icmp_code
-            port         = rule.port
+            icmp_type    = try(rule.icmp_type, null)
+            icmp_code    = try(rule.icmp_code, null)
+            port         = try(rule.port, null)
             traffic_type = rule.traffic_type
           }
         ]
@@ -109,7 +109,7 @@ resource "cloudstack_network_acl_rule" "dns" {
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = [ rule.value.port ]
+      ports        = try([ rule.value.port ], null)
       traffic_type = rule.value.traffic_type
     }
   }

@@ -55,7 +55,6 @@ locals {
         protocol     = "all"
         icmp_type    = null
         icmp_code    = null
-        port         = null
         traffic_type = "egress"
       }
     ]
