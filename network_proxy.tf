@@ -86,10 +86,11 @@ resource "cloudstack_network_acl" "proxy" {
 }
 
 module "network_acl_proxy" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.proxy.id
-  managed  = true
-  rulelist = local.aclrules_proxy_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.proxy.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_proxy_all
 }
 
 resource "cloudstack_network" "proxy" {

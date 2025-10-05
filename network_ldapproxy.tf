@@ -70,10 +70,11 @@ resource "cloudstack_network_acl" "ldapproxy" {
 }
 
 module "network_acl_ldapproxy" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.ldapproxy.id
-  managed  = true
-  rulelist = local.aclrules_ldapproxy_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.ldapproxy.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_ldapproxy_all
 }
 
 resource "cloudstack_network" "ldapproxy" {

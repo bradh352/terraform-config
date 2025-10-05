@@ -70,10 +70,11 @@ resource "cloudstack_network_acl" "dns" {
 }
 
 module "network_acl_dns" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.dns.id
-  managed  = true
-  rulelist = local.aclrules_dns_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.dns.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_dns_all
 }
 
 resource "cloudstack_network" "dns" {

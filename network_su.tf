@@ -54,10 +54,11 @@ resource "cloudstack_network_acl" "su" {
 }
 
 module "network_acl_su" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.su.id
-  managed  = true
-  rulelist = local.aclrules_su_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.su.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_su_all
 }
 
 resource "cloudstack_network" "su" {

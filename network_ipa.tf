@@ -150,10 +150,11 @@ resource "cloudstack_network_acl" "ipa" {
 }
 
 module "network_acl_ipa" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.ipa.id
-  managed  = true
-  rulelist = local.aclrules_ipa_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.ipa.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_ipa_all
 }
 
 resource "cloudstack_network" "ipa" {

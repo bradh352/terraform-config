@@ -45,10 +45,11 @@ resource "cloudstack_network_acl" "ntp" {
 }
 
 module "network_acl_ntp" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.ntp.id
-  managed  = true
-  rulelist = local.aclrules_ntp_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.ntp.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_ntp_all
 }
 
 resource "cloudstack_network" "ntp" {

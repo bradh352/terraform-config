@@ -38,10 +38,11 @@ resource "cloudstack_network_acl" "nfs" {
 }
 
 module "network_acl_nfs" {
-  source   = "./modules/cloudstack_network_acl"
-  acl_id   = cloudstack_network_acl.nfs.id
-  managed  = true
-  rulelist = local.aclrules_nfs_all
+  source    = "./modules/cloudstack_network_acl"
+  acl_id    = cloudstack_network_acl.nfs.id
+  managed   = true
+  bootstrap = vars.bootstrap
+  rulelist  = local.aclrules_nfs_all
 }
 
 resource "cloudstack_network" "nfs" {

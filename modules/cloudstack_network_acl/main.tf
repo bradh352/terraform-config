@@ -22,12 +22,65 @@ variable "rulelist" {
   type        = list(map)
 }
 
+variable "bootstrap" {
+  description = "If true, will allow 443, 80, and 53 to the outside world"
+  type        = bool
+}
+
+locals {
+  aclrules_bootstrap = {
+    start_idx = 65000
+    rules     = [
+      {
+        description  = "bootstrap rule to allow http"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        ports        = "80"
+        traffic_type = "egress"
+      },
+      {
+        description  = "bootstrap rule to allow https"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "443"
+        traffic_type = "egress"
+      },
+      {
+        description  = "bootstrap rule to allow dns:tcp"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "tcp"
+        icmp_type    = null
+        icmp_code    = null
+        ports        = "53"
+        traffic_type = "egress"
+      },
+      {
+        description  = "bootstrap rule to allow dns:udp anywhere"
+        action       = "allow"
+        cidr_list    = [ "0.0.0.0/0" ]
+        protocol     = "udp"
+        icmp_type    = null
+        icmp_code    = null
+        port         = "53"
+        traffic_type = "egress"
+      }
+    ]
+  }
+}
+
 resource "cloudstack_network_acl_rule" "this" {
   acl_id             = var.acl_id
   managed            = var.managed
   dynamic "rule" {
     for_each = flatten([
-        for list in var.rulelist : [
+        for list in concat(var.rulelist, var.bootstrap?local.aclrules_bootstrap:null) [
           for rule in list.rules : {
             rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
             description  = try(rule.description, "")
