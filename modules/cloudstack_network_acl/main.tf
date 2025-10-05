@@ -19,7 +19,7 @@ variable "managed" {
 
 variable "rulelist" {
   description = "Rule List"
-  type        = list(map)
+  type        = any
 }
 
 variable "bootstrap" {
