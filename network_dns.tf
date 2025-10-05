@@ -73,7 +73,7 @@ module "network_acl_dns" {
   source    = "./modules/cloudstack_network_acl"
   acl_id    = cloudstack_network_acl.dns.id
   managed   = true
-  bootstrap = vars.bootstrap
+  bootstrap = var.bootstrap
   rulelist  = local.aclrules_dns_all
 }
 

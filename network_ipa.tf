@@ -153,7 +153,7 @@ module "network_acl_ipa" {
   source    = "./modules/cloudstack_network_acl"
   acl_id    = cloudstack_network_acl.ipa.id
   managed   = true
-  bootstrap = vars.bootstrap
+  bootstrap = var.bootstrap
   rulelist  = local.aclrules_ipa_all
 }
 

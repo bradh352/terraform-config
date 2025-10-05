@@ -89,7 +89,7 @@ module "network_acl_proxy" {
   source    = "./modules/cloudstack_network_acl"
   acl_id    = cloudstack_network_acl.proxy.id
   managed   = true
-  bootstrap = vars.bootstrap
+  bootstrap = var.bootstrap
   rulelist  = local.aclrules_proxy_all
 }
 
