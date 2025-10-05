@@ -9,8 +9,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ldapproxy ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "389"
         traffic_type = "egress"
       },
@@ -19,8 +17,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ldapproxy ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "636"
         traffic_type = "egress"
       }
@@ -28,15 +24,13 @@ locals {
   }
 
   aclrules_ldapproxy = {
-    start_idx = 1650
+    start_idx = 30000
     rules     = [
       {
         description  = "ldap"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "389"
         traffic_type = "ingress"
       },
@@ -45,8 +39,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "636"
         traffic_type = "ingress"
       },
@@ -55,8 +47,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "389"
         traffic_type = "egress"
       },
@@ -65,8 +55,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "636"
         traffic_type = "egress"
       }

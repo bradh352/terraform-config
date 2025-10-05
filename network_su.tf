@@ -9,8 +9,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_su ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "22"
         traffic_type = "ingress"
       }
@@ -18,15 +16,13 @@ locals {
   }
 
   aclrules_su = {
-    start_idx = 1050
+    start_idx = 30000
     rules     = [
       {
         description  = "disallow VPC subnets from SSHing into bastion"
         action       = "deny"
         cidr_list    = [ local.subnet_vpc ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "22"
         traffic_type = "ingress"
       },
@@ -35,8 +31,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "22"
         traffic_type = "ingress"
       },
@@ -45,8 +39,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_vpc ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "22"
         traffic_type = "egress"
       }

@@ -13,8 +13,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.ip_secureproxy ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "8080"
         traffic_type = "egress"
       }
@@ -29,8 +27,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.ip_cacheproxy ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "8080"
         traffic_type = "egress"
       }
@@ -45,8 +41,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.ip_gitproxy ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "8080"
         traffic_type = "egress"
       }
@@ -54,15 +48,13 @@ locals {
   }
 
   aclrules_proxy = {
-    start_idx = 1550
+    start_idx = 30000
     rules     = [
       {
         description  = "Allow ingress proxy"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "8080"
         traffic_type = "ingress"
       },
@@ -71,8 +63,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "80"
         traffic_type = "egress"
       },
@@ -81,8 +71,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "443"
         traffic_type = "egress"
       }

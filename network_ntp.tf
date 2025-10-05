@@ -8,8 +8,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ntp ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "123"
         traffic_type = "egress"
       }
@@ -17,15 +15,13 @@ locals {
   }
 
   aclrules_ntp = {
-    start_idx = 1450
+    start_idx = 30000
     rules     = [
       {
         description  = "ntp"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "123"
         traffic_type = "egress"
       },
@@ -34,8 +30,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "123"
         traffic_type = "ingress"
       }

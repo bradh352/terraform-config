@@ -9,8 +9,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "80"
         traffic_type = "egress"
       },
@@ -19,8 +17,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "443"
         traffic_type = "egress"
       },
@@ -29,8 +25,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "389"
         traffic_type = "egress"
       },
@@ -39,8 +33,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "636"
         traffic_type = "egress"
       },
@@ -49,8 +41,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "88"
         traffic_type = "egress"
       },
@@ -59,8 +49,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "464"
         traffic_type = "egress"
       },
@@ -69,8 +57,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "88"
         traffic_type = "egress"
       },
@@ -79,8 +65,6 @@ locals {
         action       = "allow"
         cidr_list    = [ local.subnet_ipa ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "464"
         traffic_type = "egress"
       }
@@ -88,15 +72,13 @@ locals {
   }
 
   aclrules_ipa = {
-    start_idx = 1350
+    start_idx = 30000
     rules     = [
       {
         description  = "IPA http"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "80"
         traffic_type = "ingress"
       },
@@ -105,8 +87,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "443"
         traffic_type = "ingress"
       },
@@ -115,8 +95,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "389"
         traffic_type = "ingress"
       },
@@ -125,8 +103,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "636"
         traffic_type = "ingress"
       },
@@ -135,8 +111,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "88"
         traffic_type = "ingress"
       },
@@ -145,8 +119,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "464"
         traffic_type = "ingress"
       },
@@ -155,8 +127,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "88"
         traffic_type = "ingress"
       },
@@ -165,8 +135,6 @@ locals {
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
         port         = "464"
         traffic_type = "ingress"
       }
