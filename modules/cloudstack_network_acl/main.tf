@@ -80,7 +80,7 @@ resource "cloudstack_network_acl_rule" "this" {
   managed            = var.managed
   dynamic "rule" {
     for_each = flatten([
-        for list in concat(var.rulelist, var.bootstrap?local.aclrules_bootstrap:null) [
+        for list in concat(var.rulelist, var.bootstrap?local.aclrules_bootstrap:null) : [
           for rule in list.rules : {
             rule_number  = "${list.start_idx + index(list.rules, rule) + 1}"
             description  = try(rule.description, "")
