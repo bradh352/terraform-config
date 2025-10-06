@@ -62,7 +62,7 @@ locals {
     ]
   }
 
-  aclrules_hypervisor_all = concat(local.aclrules_common, [ local.aclrules_hypervisor ])
+  aclrules_hypervisor_all = [ local.aclrules_hypervisor ]
 }
 
 resource "cloudstack_network_acl" "hypervisor" {
@@ -85,5 +85,5 @@ resource "cloudstack_private_gateway" "default" {
   vlan                = "vlan://untagged"
   acl_id              = cloudstack_network_acl.hypervisor.id
   vpc_id              = cloudstack_vpc.infra_vpc.id
-  physical_network_id = "1b567de0-2a6d-4583-994d-c250b58b5e0d"
+  physical_network_id = "mgmt"
 }
