@@ -8,7 +8,7 @@ locals {
       {
         description  = "access ceph mon v1"
         action       = "allow"
-        cidr_list    = [ local.hypervisors ]
+        cidr_list    = local.hypervisors
         protocol     = "tcp"
         port         = "6789"
         traffic_type = "egress"
@@ -16,7 +16,7 @@ locals {
       {
         description  = "access ceph mon v2"
         action       = "allow"
-        cidr_list    = [ local.hypervisors ]
+        cidr_list    = local.hypervisors
         protocol     = "tcp"
         port         = "3300"
         traffic_type = "egress"
@@ -24,7 +24,7 @@ locals {
       {
         description  = "access ceph osd and mds"
         action       = "allow"
-        cidr_list    = [ local.hypervisors ]
+        cidr_list    = local.hypervisors
         protocol     = "tcp"
         port         = "6800-7568"
         traffic_type = "egress"
