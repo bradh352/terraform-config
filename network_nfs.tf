@@ -29,7 +29,7 @@ locals {
     ]
   }
 
-  aclrules_nfs_all = concat(local.aclrules_common, [ local.aclrules_nfs ])
+  aclrules_nfs_all = concat(local.aclrules_common, [ local.aclrules_access_ceph, local.aclrules_nfs ])
 }
 
 resource "cloudstack_network_acl" "nfs" {
