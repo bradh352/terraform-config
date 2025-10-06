@@ -1,6 +1,6 @@
 locals {
   subnet_hypervisor  = "10.10.100.0/24"
-  hypervisors        = [ "10.10.100.2", "10.10.100.3", "10.10.100.4" ]
+  hypervisors        = [ "10.10.100.2/32", "10.10.100.3/32", "10.10.100.4/32" ]
 
   aclrules_access_ceph = {
     start_idx = 40000
