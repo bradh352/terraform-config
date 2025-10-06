@@ -1,6 +1,6 @@
 locals {
   subnet_hypervisor  = "10.10.100.0/24"
-  hypervisors        = [ "10.10.100.2/32", "10.10.100.3/32", "10.10.100.4/32" ]
+  hypervisors        = [ "10.10.100.0/28" ] # Its really .2-.8 ... but didn't feel like typing them all out
 
   aclrules_access_ceph = {
     start_idx = 40000
@@ -79,11 +79,11 @@ module "network_acl_hypervisor" {
 }
 
 resource "cloudstack_private_gateway" "default" {
-  gateway             = "10.10.100.99"
+  gateway             = "10.10.100.1"
   ip_address          = "10.10.100.99"
   netmask             = "255.255.255.0"
-  vlan                = "100"
+  vlan                = "vlan://untagged"
   acl_id              = cloudstack_network_acl.hypervisor.id
   vpc_id              = cloudstack_vpc.infra_vpc.id
-  physical_network_id = "guest"
+  physical_network_id = "mgmt"
 }
