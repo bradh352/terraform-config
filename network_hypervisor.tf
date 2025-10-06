@@ -82,8 +82,8 @@ resource "cloudstack_private_gateway" "default" {
   gateway             = "10.10.100.99"
   ip_address          = "10.10.100.99"
   netmask             = "255.255.255.0"
-  vlan                = "vlan://"  # Cloudstack has this marked as required
+  vlan                = "100"
   acl_id              = cloudstack_network_acl.hypervisor.id
   vpc_id              = cloudstack_vpc.infra_vpc.id
-  physical_network_id = "mgmt"
+  physical_network_id = "guest"
 }
