@@ -62,7 +62,7 @@ locals {
     ]
   }
 
-  aclrules_hypervisor_all = [ local.aclrules_hypervisor ]
+  aclrules_hypervisor_all = concat(local.aclrules_common_nodefaultdeny, [ local.aclrules_hypervisor ])
 }
 
 resource "cloudstack_network_acl" "hypervisor" {
