@@ -92,9 +92,11 @@ Host *.pc.testenv.bradhouse.dev
 ## Bootstrapping the Cluster
 
 1. Terraform deploy with bootstrap=yes
-2. Deploy bastion host first.  Initially set DNS to 8.8.8.8 until internal DNS servers are provisioned
-3. Deploy Nameservers. Initially set DNS to 8.8.8.8 until these are provisioned.
-4. Re-deploy bastion host and Nameservers using internal DNS servers
-5. Deploy Mirror, wait for mirror to sync.
+2. Create Private Gateway manually because for some reason it doesn't work via terraform (appears to work but does not)
+   * `cmk createPrivateGateway gateway=10.10.100.1 ipaddress=10.10.100.99 netmask=255.255.255.0 vpcid=62940001-aa31-4da1-abf4-5a8c4f7a7f76 aclid=346df974-6f58-4a8e-94ab-a6559e7bbf2f physicalnetworkid=1b567de0-2a6d-4583-994d-c250b58b5e0d vlan=vlan://untagged`
+3. Deploy bastion host first.  Initially set DNS to 8.8.8.8 until internal DNS servers are provisioned
+4. Deploy Nameservers. Initially set DNS to 8.8.8.8 until these are provisioned.
+5. Re-deploy bastion host and Nameservers using internal DNS servers
+6. Deploy Mirror, wait for mirror to sync.
 6. Deploy FreeIPA
 7.

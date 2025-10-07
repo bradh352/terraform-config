@@ -78,12 +78,17 @@ module "network_acl_hypervisor" {
   rulelist  = local.aclrules_hypervisor_all
 }
 
-resource "cloudstack_private_gateway" "default" {
-  gateway             = "10.10.100.1"
-  ip_address          = "10.10.100.99"
-  netmask             = "255.255.255.0"
-  vlan                = "vlan://untagged"
-  acl_id              = cloudstack_network_acl.hypervisor.id
-  vpc_id              = cloudstack_vpc.infra_vpc.id
-  physical_network_id = "mgmt"
-}
+# Have to create manually because this doesn't create it right for some reason
+#
+# via UI or :
+# cmk createPrivateGateway gateway=10.10.100.1 ipaddress=10.10.100.99 netmask=255.255.255.0 vpcid=62940001-aa31-4da1-abf4-5a8c4f7a7f76 aclid=346df974-6f58-4a8e-94ab-a6559e7bbf2f physicalnetworkid=1b567de0-2a6d-4583-994d-c250b58b5e0d vlan=vlan://untagged
+#
+#resource "cloudstack_private_gateway" "default" {
+#  gateway             = "10.10.100.1"
+#  ip_address          = "10.10.100.99"
+#  netmask             = "255.255.255.0"
+#  vlan                = "vlan://untagged"
+#  acl_id              = cloudstack_network_acl.hypervisor.id
+#  vpc_id              = cloudstack_vpc.infra_vpc.id
+#  physical_network_id = "mgmt"
+#}
