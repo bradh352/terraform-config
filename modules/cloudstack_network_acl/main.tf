@@ -32,7 +32,7 @@ locals {
     start_idx = 65000
     rules     = [
       {
-        description  = "bootstrap rule to allow http"
+        description  = "bootstrap allow http"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
@@ -42,7 +42,7 @@ locals {
         traffic_type = "egress"
       },
       {
-        description  = "bootstrap rule to allow https"
+        description  = "bootstrap allow https"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
@@ -52,7 +52,7 @@ locals {
         traffic_type = "egress"
       },
       {
-        description  = "bootstrap rule to allow dns:tcp"
+        description  = "bootstrap allow dns tcp"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "tcp"
@@ -62,7 +62,7 @@ locals {
         traffic_type = "egress"
       },
       {
-        description  = "bootstrap rule to allow dns:udp anywhere"
+        description  = "bootstrap allow dns udp"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
         protocol     = "udp"

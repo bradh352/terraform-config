@@ -65,6 +65,13 @@ variable "root_disk_size" {
   default     = "20"
 }
 
+variable "extraconfig" {
+  description = "extra configuration to embed into libvirt xml"
+  type        = string
+  default     = null
+  nullable    = true
+}
+
 resource "cloudstack_instance" "this" {
   name               = var.name
   group              = var.group
@@ -86,6 +93,7 @@ resource "cloudstack_instance" "this" {
     "dataDiskController" = "scsi"
     "iothreads"          = "1"
     "io.policy"          = "io_uring"
+    "extraconfig-1"      = var.extraconfig
   }
 }
 
