@@ -38,7 +38,7 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        ports        = "80"
+        port         = "80"
         traffic_type = "egress"
       },
       {
@@ -58,7 +58,7 @@ locals {
         protocol     = "tcp"
         icmp_type    = null
         icmp_code    = null
-        ports        = "53"
+        port         = "53"
         traffic_type = "egress"
       },
       {
@@ -102,7 +102,7 @@ resource "cloudstack_network_acl_rule" "this" {
       protocol     = rule.value.protocol
       icmp_type    = rule.value.icmp_type
       icmp_code    = rule.value.icmp_code
-      ports        = rule.value.port == null ? null : [ rule.value.port ]
+      port         = rule.value.port
       traffic_type = rule.value.traffic_type
     }
   }

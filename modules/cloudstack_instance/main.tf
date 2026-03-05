@@ -84,6 +84,7 @@ resource "cloudstack_instance" "this" {
   root_disk_size     = var.root_disk_size
   expunge            = true
   uefi               = true
+  boot_mode          = "legacy"
   user_data          = file("cloud-init")
   lifecycle {
     ignore_changes = [ user_data ]
