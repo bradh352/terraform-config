@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     cloudstack = {
-      source  = "cloudstack/cloudstack"
+      source  = "local/cloudstack/cloudstack"
     }
   }
 }
@@ -78,7 +78,7 @@ locals {
 resource "cloudstack_network_acl_rule" "this" {
   acl_id             = var.acl_id
   managed            = var.managed
-  dynamic "rule" {
+  dynamic "ruleset" {
     for_each = flatten([
         for list in concat(var.rulelist, var.bootstrap?[local.aclrules_bootstrap]:[]) : [
           for rule in list.rules : {
@@ -95,15 +95,15 @@ resource "cloudstack_network_acl_rule" "this" {
         ]
       ])
     content {
-      rule_number  = rule.value.rule_number
-      description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
-      action       = rule.value.action
-      cidr_list    = rule.value.cidr_list
-      protocol     = rule.value.protocol
-      icmp_type    = rule.value.icmp_type
-      icmp_code    = rule.value.icmp_code
-      port         = rule.value.port
-      traffic_type = rule.value.traffic_type
+      rule_number  = ruleset.value.rule_number
+      description  = "${ruleset.value.description}: ${ruleset.value.action} ${ruleset.value.traffic_type}"
+      action       = ruleset.value.action
+      cidr_list    = ruleset.value.cidr_list
+      protocol     = ruleset.value.protocol
+      icmp_type    = ruleset.value.icmp_type
+      icmp_code    = ruleset.value.icmp_code
+      port         = ruleset.value.port
+      traffic_type = ruleset.value.traffic_type
     }
   }
 }

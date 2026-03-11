@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     cloudstack = {
-      source  = "cloudstack/cloudstack"
+      source  = "local/cloudstack/cloudstack"
     }
   }
 }
