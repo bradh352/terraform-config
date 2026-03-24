@@ -29,56 +29,23 @@ variable "bootstrap" {
 
 locals {
   aclrules_bootstrap = {
-    start_idx = 65000
+    start_idx = 50000
     rules     = [
       {
-        description  = "bootstrap allow http"
+        description  = "bootstrap allow all"
         action       = "allow"
         cidr_list    = [ "0.0.0.0/0" ]
-        protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
-        port         = "80"
-        traffic_type = "egress"
-      },
-      {
-        description  = "bootstrap allow https"
-        action       = "allow"
-        cidr_list    = [ "0.0.0.0/0" ]
-        protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
-        port         = "443"
-        traffic_type = "egress"
-      },
-      {
-        description  = "bootstrap allow dns tcp"
-        action       = "allow"
-        cidr_list    = [ "0.0.0.0/0" ]
-        protocol     = "tcp"
-        icmp_type    = null
-        icmp_code    = null
-        port         = "53"
-        traffic_type = "egress"
-      },
-      {
-        description  = "bootstrap allow dns udp"
-        action       = "allow"
-        cidr_list    = [ "0.0.0.0/0" ]
-        protocol     = "udp"
-        icmp_type    = null
-        icmp_code    = null
-        port         = "53"
+        protocol     = "all"
         traffic_type = "egress"
       }
     ]
   }
 }
 
-resource "cloudstack_network_acl_rule" "this" {
+resource "cloudstack_network_acl_ruleset" "this" {
   acl_id             = var.acl_id
   managed            = var.managed
-  dynamic "ruleset" {
+  dynamic "rule" {
     for_each = flatten([
         for list in concat(var.rulelist, var.bootstrap?[local.aclrules_bootstrap]:[]) : [
           for rule in list.rules : {
@@ -95,20 +62,20 @@ resource "cloudstack_network_acl_rule" "this" {
         ]
       ])
     content {
-      rule_number  = ruleset.value.rule_number
-      description  = "${ruleset.value.description}: ${ruleset.value.action} ${ruleset.value.traffic_type}"
-      action       = ruleset.value.action
-      cidr_list    = ruleset.value.cidr_list
-      protocol     = ruleset.value.protocol
-      icmp_type    = ruleset.value.icmp_type
-      icmp_code    = ruleset.value.icmp_code
-      port         = ruleset.value.port
-      traffic_type = ruleset.value.traffic_type
+      rule_number  = rule.value.rule_number
+      description  = "${rule.value.description}: ${rule.value.action} ${rule.value.traffic_type}"
+      action       = rule.value.action
+      cidr_list    = rule.value.cidr_list
+      protocol     = rule.value.protocol
+      icmp_type    = rule.value.icmp_type
+      icmp_code    = rule.value.icmp_code
+      port         = rule.value.port
+      traffic_type = rule.value.traffic_type
     }
   }
 }
 
 output "id" {
   description = "The ID of the cloudstack network acl rule"
-  value       = cloudstack_network_acl_rule.this.id
+  value       = cloudstack_network_acl_ruleset.this.id
 }
